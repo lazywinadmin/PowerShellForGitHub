@@ -246,15 +246,14 @@ try
 
         $original = Get-GitHubRepository -OrganizationName $script:organizationName
 
-        $repositoryName = [guid]::NewGuid().Guid
-        $null = New-GitHubRepository -RepositoryName $repositoryName -OrganizationName $script:organizationName
+        $repo = New-GitHubRepository -RepositoryName ([guid]::NewGuid().Guid) -OrganizationName $script:organizationName
         $current = Get-GitHubRepository -OrganizationName $script:organizationName
 
         It 'Should return expected number of organization repositories' {
             (@($current).Count - @($original).Count) | Should be 1
         }
 
-        $null = Remove-GitHubRepository -OwnerName $script:organizationName -RepositoryName $repositoryName
+        $null = Remove-GitHubRepository -Uri $repo.svn_url
     }
 
     Describe 'Getting unique contributors from contributors array' {
